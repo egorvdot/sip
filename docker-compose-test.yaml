@@ -1,0 +1,11 @@
+services:
+  test:
+    build:
+      context: .
+      target: dev
+    command: [ "uv", "run", "pytest", "-v" ]
+  test-cov:
+    build:
+      context: .
+      target: dev
+    command: [ "uv", "run", "pytest", "--cov=app", "--cov-report=term-missing" ]
