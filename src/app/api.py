@@ -24,7 +24,6 @@ async def get_weather(city: str):
     """Получение погоды для города."""
     data = await fetch_weather_from_api(city)
     temp = data["current"]["temperature_2m"]
-
     return WeatherResponse(
         city=city,
         temperature=temp,
