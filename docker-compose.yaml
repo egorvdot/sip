@@ -1,0 +1,9 @@
+services:
+  app:
+    hostname: app
+    user: "1000"
+    build:
+      context: .
+      target: production
+    ports:
+      - "38080:8080"
