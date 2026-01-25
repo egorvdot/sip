@@ -6,6 +6,10 @@ scrape_configs:
     static_configs:
       - targets:
           - prometheus:9090
+  - job_name: grafana
+    static_configs:
+      - targets:
+          - grafana:3000
   - job_name: app-system-metrics
     metrics_path: '/metrics'
     params:
