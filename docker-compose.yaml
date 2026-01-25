@@ -7,3 +7,18 @@ services:
       target: production
     ports:
       - "38080:8080"
+  # https://prometheus.io/docs/introduction/overview/
+  prometheus:
+    image: prom/prometheus:v3.9.1
+    hostname: prometheus
+    volumes:
+      - type: bind
+        source: ./prometheus/data
+        target: /prometheus
+        bind:
+          create_host_path: true
+      - type: bind
+        source: ./prometheus/prometheus.yml
+        target: /etc/prometheus/prometheus.yml
+    ports:
+      - 39090:9090
