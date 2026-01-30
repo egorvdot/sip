@@ -1,4 +1,6 @@
+from unittest.mock import AsyncMock, patch
 from prometheus_client import CONTENT_TYPE_LATEST
+from prometheus_client.parser import text_string_to_metric_families
 
 
 async def test_metrics_with_valid_type(async_client):
@@ -97,3 +99,20 @@ async def test_metrics_with_multiple_query_params(async_client):
     assert response.status_code == 200
     content = response.content.decode("utf-8")
     assert "python_info" in content
+
+
+async def test_weather_feels_like_metric(async_client, mock_weather_data):
+    """Проверка сбора информации о погоде в метрику."""
+    with patch(
+        "app.api.fetch_weather_from_api",
+        new_callable=AsyncMock,
+        return_value=mock_weather_data,
+    ):
+        await async_client.get("/weather/London")
+        response = await async_client.get("/metrics?kind=analytic")
+
+        [family, *_] = text_string_to_metric_families(response.text)
+        assert family.name == "temp_feels_like"
+        [sample] = family.samples
+        assert sample.value == 1.0
+        assert sample.labels == {"feels_like": "warm"}

@@ -11,9 +11,16 @@ scrape_configs:
       - targets:
           - grafana:3000
   - job_name: app-system-metrics
-    metrics_path: '/metrics'
+    metrics_path: "/metrics"
     params:
-      type: ['system']
+      kind: ["system"]
+    static_configs:
+      - targets:
+          - app:8080
+  - job_name: app-analytic-metrics
+    metrics_path: "/metrics"
+    params:
+      kind: ["analytic"]
     static_configs:
       - targets:
           - app:8080

@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from prometheus_client import (
     CollectorRegistry,
+    Counter,
     GC_COLLECTOR,
     PLATFORM_COLLECTOR,
     PROCESS_COLLECTOR,
@@ -29,6 +30,15 @@ async def lifespan(app: FastAPI):
     registry.register(PLATFORM_COLLECTOR)
     registry.register(PROCESS_COLLECTOR)
     app.state.system_metrics_registry = registry
+
+    registry = CollectorRegistry()
+    app.state.feels_like_counter = Counter(
+        name="temp_feels_like",
+        documentation="Description of counter",
+        labelnames=["feels_like"],
+        registry=registry,
+    )
+    app.state.analytic_metrics_registry = registry
 
     logger.info("Metrics collectors initialized")
     yield
